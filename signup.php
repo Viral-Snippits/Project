@@ -24,6 +24,13 @@
         <![endif]-->
 
     </head>
+    <style>
+    body{
+            background-image: url("back.jpg");
+            /*background-repeat: no-repeat;*/
+            background-attachment: fixed;
+        }
+    </style>
 
 <body>
 

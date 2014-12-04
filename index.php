@@ -28,6 +28,9 @@
         .sub{
 
       	}
+        h1{
+          color:white;
+        }
       	#bullet{
       		list-style-type: none;
       		padding:10px;
@@ -43,6 +46,13 @@
 
         #deats{
         }
+
+        body{
+            background-image: url("back.jpg");
+            /*background-repeat: no-repeat;*/
+            background-attachment: fixed;
+        }
+    
   	</style>
 	</head>
 
@@ -58,7 +68,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/project/index.php">Viral Snippits</span></a>
+      <a class="navbar-brand" href="/project/index.php">Viral Snippets</span></a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -66,7 +76,7 @@
       <ul class="nav navbar-nav">
         <li><a href="#" id='global'>Global Feed</a></li>
         <li><a href="#" id='subs'>Subscriptions</a></li>
-        <li><a href="#" id='profile'>My Profile</a></li>
+        <li><a href="#" id='profile' data-id='<?php echo $_SESSION['USER-ID']; ?>'>My Profile</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/project/index.php?action=signout">Sign Out</a></li>
@@ -90,7 +100,7 @@
         <div class="panel-heading"><span class="glyphicon glyphicon-remove"></span>Delete<b>Sound file title</b><span class='pull-right'><a href='#' data-value='3'> cody_richards</a></span></div>
         <div class="panel-body"> Sound file description</div>
         <div class= "panel-footer">
-            <button type="button" class="btn btn-primary btn" data-toggle="modal" data-target="#myModal">Show Comments</button>
+            <button type="button" class="btn btn-primary btn" id='getcomments' data-toggle="modal" data-target="#myModal">Show Comments</button>
             <div class="pull-right" style="font-size: 18px;  padding: 5px;">10</div>
             <button type="button" class="btn btn-primary btn pull-right">Rate</button>
         </div>
@@ -120,14 +130,13 @@
             </button>
             <h4 class="modal-title" id="myModalLabel">User Comments</h4>
           </div>
-          <div class="modal-body">
-            <div class="panel panel-default">
-               <div class="panel-heading" style="font-size:16px;"><b>Username</b></div>
-                <div class="panel-body"> Sound file description</div>
+          <div class="modal-body" id='commentsHolder'>
+            
           </div>
           <div class="modal-footer">
-            <textarea placeholder='Enter your comment here...' style='width:100%;'></textarea>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Submit</button>
+            <textarea placeholder='Enter your comment here...' id='theComment' style='width:100%;'></textarea>
+            <button type="button" class="btn btn-default" id='addcomment'>Submit</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -136,6 +145,6 @@
   </div>
 
 	</body>
-  <script src='js/custom.js'></script>
+  <script src='js/custom_refactor.js'></script>
 </html>
  

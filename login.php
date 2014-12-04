@@ -25,6 +25,11 @@
         <![endif]-->
 
     </head>
+    <style>
+        body{
+            background-image: url("back.jpg");
+        }
+    </style>
 
 <body>
 
@@ -32,7 +37,7 @@
     <div class="row">
         <div class="jumbotron col-sm-6 col-sm-offset-3">
             <div class="row">
-                <h1 class="col-sm-12" id='contenthead'> Login </h1>
+                <h1 class="col-sm-12" id='contenthead'> Viral Snippets </h1>
             </div>
             <div class="row" id='warnings'><?php session_start(); if(isset($_SESSION['USER-ID'])) header('Location: /project/index.php'); if(isset($_SESSION['ERROR'])) echo '<div class="alert alert-danger" role="alert">'.$_SESSION['ERROR'].'</div>'; unset($_SESSION['ERROR']); ?></div>
             <div class="row" id='content'>
