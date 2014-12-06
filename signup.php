@@ -40,7 +40,7 @@
             <div class="row">
                 <h1 class="col-sm-12" id='contenthead'> Sign Up </h1>
             </div>
-            <div class="row" id='warnings'></div>
+            <div class="row" id='warnings'><?php session_start(); if(isset($_SESSION['error'])){ echo '<div class="alert alert-danger">'.$_SESSION['error'].'</div>'; unset($_SESSION['error']);}?></div>
             <div class="row" id='content'>
                 <form role="form" class="form-vertical" id='contentform' action='php/bridge.php' method='POST'>
                     <div class='form-group'>

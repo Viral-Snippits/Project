@@ -39,7 +39,7 @@
             <div class="row">
                 <h1 class="col-sm-12" id='contenthead'> Viral Snippets </h1>
             </div>
-            <div class="row" id='warnings'><?php session_start(); if(isset($_SESSION['USER-ID'])) header('Location: /project/index.php'); if(isset($_SESSION['ERROR'])) echo '<div class="alert alert-danger" role="alert">'.$_SESSION['ERROR'].'</div>'; unset($_SESSION['ERROR']); ?></div>
+            <div class="row" id='warnings'><?php session_start(); if(isset($_SESSION['USER-ID'])) header('Location: /project/index.php'); if(isset($_SESSION['ERROR'])) echo '<div class="alert alert-danger" role="alert">'.$_SESSION['ERROR'].'</div>'; unset($_SESSION['ERROR']); if(isset($_SESSION['acctMade'])){ echo $_SESSION['acctMade']; unset($_SESSION['acctMade']); } ?></div>
             <div class="row" id='content'>
                 <form role="form" class="form-vertical" id='loginform' action='php/bridge.php' method='POST'>
                     <div class='form-group'>

@@ -8,10 +8,10 @@
 		}
 
 		public function post($data){
-			if(preg_match('^.*(<script>|<\/script>).*$', $data['title']) || preg_match('^.*(<script>|<\/script>).*$', $data['content']))
+			if(preg_match('/^.*(<script>|<\/script>).*$/', $data['title']) || preg_match('/^.*(<script>|<\/script>).*$/', $data['content']))
 				die('NO XSS HERE');
 			$stmt = $this->util->con->prepare("INSERT INTO POSTS (USER_ID, SOUND_ID, TITLE, CONTENT) VALUES (?, ?, ?, ?)");
-			$stmt->execute(array($data['user_id'], $data['sound_id'], $data['title'], $data['content']));
+			$stmt->execute(array($data['user-id'], $data['sound_id'], $data['title'], $data['content']));
 		}
 
 		public function get($data){

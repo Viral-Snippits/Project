@@ -3,14 +3,14 @@ var states = {}
 /*
   Function used to compile a post that is visible on the screen
 */
-function makepost(title, desc, user, uid, rating, del, postid) {
+function makepost(title, desc, user, uid, rating, del, postid, sdflpath) {
     var string = ''
     string += '<div class="panel panel-default">'
     if(del)
       string +=     '<div class="panel-heading"><b>'+String(title)+' </b><a class="deleterr" href="#" post-id="'+postid+'"><span class="glyphicon glyphicon-remove btn-danger"></span></a><span class="pull-right"><a href="#" data-value="'+uid+'">'+user+'</a></span></div>'
     else
       string +=     '<div class="panel-heading"><b>'+String(title)+'</b><span class="pull-right"><a href="#" class="otherprof" data-id="'+uid+'">'+user+'</a></span></div>'
-    string +=     '<div class="panel-body">'+String(desc)+'<br/><a href="#">Sound File</a></div>'
+    string +=     '<div class="panel-body">'+String(desc)+'<br/><a data-id="'+sdflpath+'" class="openFile" href="#">Sound File</a></div>'
     string +=     '<div class="panel-footer">'
     string +=        '<button type="button" class="btn btn-primary getcomments" post-id="'+postid+'" data-toggle="modal" data-target="#myModal">Show Comments</button>'
     string +=        '<div class="pull-right" id="rating'+postid+'" style="font-size: 18px  padding: 5px">'+rating+'</div>'
@@ -27,6 +27,24 @@ function makecomment(uid, username, comment){
   string += '<div class="panel-body">'+comment+'</div></div>'
   return string
       
+}
+
+var getSoundPath = function(){
+    var theid = $(this).attr('data-id')
+    console.log(theid)
+    $.ajax({
+      type : 'POST',
+      url : '/project/php/govenor.php',
+      data : {action : 'get_soundpath', json : {sound_id : theid}},
+      success : function(_path){
+        console.log(_path)
+        var path = _path
+        path = path.split('/')
+        console.log(path[3])
+        if(path[3] !== undefined)
+            window.location.replace('http://104.131.97.153/'+path[4]+'/'+path[5]+'/'+path[6]+'/'+path[7]+'/'+path[8])
+      }
+    })
 }
 
 /*
@@ -164,7 +182,7 @@ var pull_subs = function(){
 		  console.log(json)
 		  var posts = $.parseJSON(json)
 		  $.each(posts, function(key, val){
-		    $('#content').append(makepost(val['TITLE'], val['CONTENT'], val['USERNAME'], val['USER_ID'], val['RATING'], false, val['POST_ID']))
+		    $('#content').append(makepost(val['TITLE'], val['CONTENT'], val['USERNAME'], val['USER_ID'], val['RATING'], false, val['POST_ID'], val['SOUND_ID']))
 		  })
 		  $('.rate').click(dorate)
 		  $('.otherprof').click(pull_profile)
@@ -198,7 +216,7 @@ var pull_profile = function(){
 				var bop = false
 				if(val['USER_ID'] === userid)
 					bop = true
-				$('#content').append(makepost(val['TITLE'], val['CONTENT'], val['USERNAME'], val['USER_ID'], val['RATING'], bop, val['POST_ID']))
+				$('#content').append(makepost(val['TITLE'], val['CONTENT'], val['USERNAME'], val['USER_ID'], val['RATING'], bop, val['POST_ID'], val['SOUND_ID']))
 			})
 			$('.deleterr').click(deletepost)
   	 	$('.subscribe').click(sub)
@@ -221,7 +239,7 @@ var pull_global = function(){
 		success : function(json){
 			var posts = $.parseJSON(json)
 			$.each(posts, function(key, val){
-				$('#content').append(makepost(val['TITLE'], val['CONTENT'], val['USERNAME'], val['USER_ID'], val['RATING'], false, val['POST_ID']))
+				$('#content').append(makepost(val['TITLE'], val['CONTENT'], val['USERNAME'], val['USER_ID'], val['RATING'], false, val['POST_ID'], val['SOUND_ID']))
 			})
 			$('.rate').click(dorate)
 			$('.otherprof').click(pull_profile)
@@ -235,7 +253,6 @@ var pull_global = function(){
 */
 var pull_subedto = function(userid){
   $('#bullet').html('')
-  $('#bullet').append('<li><h1>Subscriptions</h1></li>')
 	$.ajax({
     type : 'post',
     url : '/project/php/govenor.php',
@@ -243,7 +260,7 @@ var pull_subedto = function(userid){
     success : function(subs){
     	var all = $.parseJSON(subs)
   		$.each(all, function(key, val){
-  			$('#bullet').append('<li><a href="#" class="otherprof" data-id="'+val['SUBEE']+'">'+val['uname']+'</a></li>')
+  			$('#bullet').append('<a href="#" class="otherprof btn btn-default" data-id="'+val['SUBEE']+'">'+val['uname']+'</a>')
   		})
 		  $('.otherprof').click(pull_profile)
     }
@@ -261,7 +278,7 @@ $( document ).ready(function(){
 	pull_subedto(userid)
 	pull_global()
   $('#addcomment').click(storeComment)
-
+  $( document ).on('click.openFile', '.openFile', getSoundPath)
 })
 
 // Bind the profile, global, and subscription events to the appropriate functions
@@ -289,47 +306,6 @@ $('a#changepass').click(function(){
         data  : {action : "change_password", json : {user_id : userid, password : pass}},
         success : function(data){
           window.location.replace('http://104.131.97.153/project/index.php?action=signout')
-        }
-      })
-    })
-  }
-})
-
-/* 
-  Jquery event bind on the 'Post a Snippet' button
-
-  If state of post is true then it removes the input fields
-  If state of post is false then it shows the input fields
-*/
-$('a#makepost').click(function(){
-  $('div#passfields').html('')
-  if(states.post){
-     $('div#postfields').html('')
-     states.post = false
-  }
-  else{
-    states.chpass = false
-    states.post = true
-    $('div#postfields').append('<div class="input-group"><input type="text" class="form-control" id="title" placeholder="Title"><textarea placeholder="Description" id="content" width="290px"></textarea><input type="file" name="soundfile" /><button class="btn btn-primary btn-lg btn-block" id="makeapost">Submit!</button></div><!-- /input-group -->')
-    
-    /*
-      Bind the asyncronous post 
-    */
-    $('button#makeapost').click(function(){
-      var userid = $('#u-id').val()
-      var title = $('input#title').val()
-      var content = $('textarea#content').val()
-      $.ajax({
-        type : 'POST',
-        url : '/project/php/govenor.php',
-        data : {action : 'new_post', json : {user_id : userid, sound_id : 'null', title : title, content : content}},
-        success : function(data){
-            console.log('POST MADE')
-            var userid = $('#u-id').val()
-            getprofileposts(userid)
-            $('div#postfields').html('')
-            states.post = false
-
         }
       })
     })

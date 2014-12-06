@@ -19,14 +19,14 @@
 <html>
 	<head>
     <link rel="stylesheet" type='text/css' href='css/bootstrap.min.css'>
-    <script src='js/bootstrap.min.js'></script>
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <link rel="stylesheet" type='text/css' href='css/bootstrap.min.css'>
     <script src='js/bootstrap.min.js'></script>
+    <script src='js/jquery.form.min.js'></script>
   	<style>
         .sub{
-
+  
       	}
         h1{
           color:white;
@@ -87,11 +87,10 @@
 </nav>
 <div class="col-xs-1"></div>
 <div class = "subs col-xs-2">
-	
-  <ul id="bullet">
-		<li style = "padding-bottom: 8px;"><h1 style="font-size: 30px;">Subscriptions</h1></li>
-	</ul>
+	<h1 style="font-size: 30px;">Subscriptions</h1>
+  <div class="btn-group-vertical" id='bullet' role="group" aria-label="...">
 	</div>
+</div>
 	<div class= "col-xs-6">
     <!--APPEND POSTS HERE -->
     <div><h1 id='content_head'>Global Feed</h1></div>
@@ -112,8 +111,8 @@
       <div class='row'></div>
       <h1> Actions </h1>
       <div class='btn-group-vertical'>
-        <a href='#' id='makepost' class='btn btn-success btn-lg btn-block col-sm-12'>Post a Snippet!</a>
-        <div id='postfields'></div>
+        <a href='#' id='makepost' class='btn btn-success btn-lg btn-block col-sm-12' data-toggle="modal" data-target="#snippetModal">Post a Snippet!</a>
+       
         <a href='#' id='changepass' class='btn btn-warning btn-lg btn-block col-sm-12'>Change Password</a>
         <div id='passfields'></div>
         <a href='#' id='deleteacct' class='btn btn-danger btn-lg btn-block col-sm-12'>Delete Account</a>
@@ -138,6 +137,31 @@
             <button type="button" class="btn btn-default" id='addcomment'>Submit</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="snippetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"></span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">Post A Snippet!</h4>
+          </div>
+           <form id='postfields' method='POST' action='php/bridge.php' enctype="multipart/form-data">
+          <div class="modal-body" id='commentsHolder'>
+            <div class="input-group">
+                <input type="hidden" name="user-id" value="<?php echo $_SESSION['USER-ID']; ?>" />
+                <input type="text" class="form-control" name="title" placeholder="Title">
+                <textarea placeholder="Description" name="content" width="290px"></textarea>
+                <input type="file" name="soundfile" />
+                
+              </div>
+          </div>
+          <div class="modal-footer">
+            <input type="submit" class="btn btn-primary btn-lg btn-block" id="makeapost" />
+          </div>
+          </form>
         </div>
       </div>
     </div>
